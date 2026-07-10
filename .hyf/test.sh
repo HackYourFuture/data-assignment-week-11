@@ -72,13 +72,13 @@ else
 fi
 
 if [[ -f "$APP_DIR/.env" ]]; then
-  fail "week11-streamlit/.env is committed -- BLOCKER: run: git rm --cached week11-streamlit/.env"
+  blocker "week11-streamlit/.env is committed -- run: git rm --cached week11-streamlit/.env, then rotate the Postgres password since it was pushed"
 else
   ((l2 += 5)); pass "week11-streamlit/.env not committed"
 fi
 
 if [[ -f "$app" ]] && grep -qE "postgresql://[^\"'[:space:]]*:[^\"'[:space:]]*@" "$app"; then
-  fail "app.py: hardcoded Postgres connection string with an inline password -- use os.environ/os.getenv instead"
+  blocker "app.py: hardcoded Postgres connection string with an inline password -- use os.environ/os.getenv instead, then rotate the password since it was pushed"
 elif [[ -f "$app" ]]; then
   ((l2 += 5)); pass "app.py: no hardcoded Postgres credentials found"
 fi
