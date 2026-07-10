@@ -13,29 +13,35 @@ Both get documented in `metric_definitions.md` so nobody argues about what a num
 
 ## What this repo gives you
 
-This repo is a **destination**, not a starting point for either dashboard:
+This repo is a **ready-to-run Streamlit project** for the code-first dashboard, plus a destination for your Metabase deliverables:
 
 ```text
 .
-├── README.md                    <- TODO: your Metabase dashboard link / screenshots go here
-├── AI_ASSIST.md                  <- TODO: template, document one LLM session
-├── metric_definitions.template.md  <- copy into week11-streamlit/ once you've replaced it (see below)
-├── week11-streamlit/             <- placeholder: replace with your own Streamlit app (see below)
-│   └── README.md                 <- instructions, delete once you've replaced the folder
-└── .hyf/                         <- autograder, do not edit
+├── README.md                       <- TODO: your Metabase dashboard link / screenshots go here
+├── AI_ASSIST.md                     <- TODO: template, document one LLM session
+├── metric_definitions.template.md   <- copy into week11-streamlit/ (see below)
+├── week11-streamlit/                <- ready-to-run: project config wired up, KPI panel is a TODO stub
+│   ├── app.py                       <- TODO: implement the headline KPIs panel
+│   ├── pyproject.toml
+│   ├── uv.lock
+│   └── .env.example                 <- copy to .env, fill in your credentials
+└── .hyf/                            <- autograder, do not edit
 ```
 
 - **Metabase**: build it directly in the HYF-managed Metabase instance. There is nothing to scaffold here: put the dashboard link (or screenshots, if the public link is unavailable) in this `README.md`, under "My submission" below.
-- **Streamlit**: don't start from a blank file. Clone [`nyc-taxi-streamlit-reference`](https://github.com/lassebenni/nyc-taxi-streamlit-reference) and switch to `chapter-5-start` (or `chapter-5-solution`), then replace the placeholder `week11-streamlit/` folder in this repo with it:
+- **Streamlit**: `week11-streamlit/` is already wired up (same `run_query` caching pattern taught in "Building a Metrics Dashboard", Week 11 Chapter 5) with page setup done and the headline-KPIs panel stubbed as `raise NotImplementedError(...)`. Your job is the query and the three `.metric()` tiles, not the project scaffolding:
 
 ```bash
-git clone https://github.com/lassebenni/nyc-taxi-streamlit-reference.git /tmp/week11-streamlit
-cd /tmp/week11-streamlit
-git switch chapter-5-start
-rm -rf .git
-rm -rf /path/to/this/repo/week11-streamlit
-mv /tmp/week11-streamlit /path/to/this/repo/week11-streamlit
-cp /path/to/this/repo/metric_definitions.template.md /path/to/this/repo/week11-streamlit/metric_definitions.md
+cd week11-streamlit
+uv sync
+cp .env.example .env   # fill in your credentials
+uv run streamlit run app.py
+```
+
+Once your KPI panel runs, copy the template into place and fill it in:
+
+```bash
+cp metric_definitions.template.md week11-streamlit/metric_definitions.md
 ```
 
 Fill in `week11-streamlit/metric_definitions.md`: a five-field definition (name, description, calculation, data source, refresh frequency) for **every Metabase Question and every Streamlit panel** you build.

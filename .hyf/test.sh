@@ -30,6 +30,12 @@ file_has_content() {
   return 0
 }
 
+# Like grep, but strips '#'-comments first so a keyword mentioned only in a
+# "# TODO: query fct_trips" guide comment doesn't count as real code.
+pygrep() {
+  sed -E 's/#.*$//' "$2" | grep -qE "$1"
+}
+
 # ── Level 1 (20 pts): required files exist ──────────────────────────────────
 l1=0
 required_files=(
@@ -82,34 +88,38 @@ pass "Level 2: secrets hygiene ($l2/15 pts)"
 # ── Level 3 (25 pts): Streamlit app content ─────────────────────────────────
 l3=0
 if [[ -f "$app" ]]; then
-  if grep -qE "^import sqlalchemy|^from sqlalchemy" "$app"; then
+  if pygrep "^import sqlalchemy|^from sqlalchemy" "$app"; then
     ((l3 += 5)); pass "app.py: imports sqlalchemy"
   else
     fail "app.py: no sqlalchemy import found"
   fi
 
-  if grep -qE "os\.environ|os\.getenv" "$app"; then
+  if pygrep "os\.environ|os\.getenv" "$app"; then
     ((l3 += 5)); pass "app.py: reads credentials from the environment"
   else
     fail "app.py: no os.environ/os.getenv call found -- credentials must come from the environment"
   fi
 
-  if grep -qE "\.metric\(" "$app"; then
-    ((l3 += 5)); pass "app.py: uses .metric() (st.metric or a st.columns() cell)"
+  if pygrep "raise NotImplementedError" "$app"; then
+    fail "app.py: raise NotImplementedError still present -- the headline KPIs panel is not implemented"
   else
-    fail "app.py: no .metric() call found -- Minimum requires at least one KPI"
+    if pygrep "\.metric\(" "$app"; then
+      ((l3 += 5)); pass "app.py: uses .metric() (st.metric or a st.columns() cell)"
+    else
+      fail "app.py: no .metric() call found -- Minimum requires at least one KPI"
+    fi
+
+    if pygrep "fct_trips" "$app"; then
+      ((l3 += 5)); pass "app.py: queries fct_trips"
+    else
+      fail "app.py: fct_trips not referenced -- the dashboard must read the Week 10 mart"
+    fi
   fi
 
-  if grep -q "@st\.cache_data" "$app"; then
+  if pygrep "@st\.cache_data" "$app"; then
     ((l3 += 5)); pass "app.py: uses @st.cache_data"
   else
     fail "app.py: no @st.cache_data found -- database calls must be cached"
-  fi
-
-  if grep -q "fct_trips" "$app"; then
-    ((l3 += 5)); pass "app.py: queries fct_trips"
-  else
-    fail "app.py: fct_trips not referenced -- the dashboard must read the Week 10 mart"
   fi
 else
   fail "week11-streamlit/app.py missing -- cannot check app content"

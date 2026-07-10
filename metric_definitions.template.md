@@ -4,6 +4,9 @@ Five fields per metric: Name, Description, Calculation, Data source, Refresh fre
 
 ## Metabase panels
 
+<!-- One block per Question: trip count by payment type, average fare per
+     mile by dropoff borough, average trip duration by hour of day. -->
+
 ### Panel 1: TODO name
 
 - **Name**: TODO
@@ -29,6 +32,9 @@ Five fields per metric: Name, Description, Calculation, Data source, Refresh fre
 - **Refresh frequency**: TODO
 
 ## Streamlit panels
+
+<!-- Headline KPIs panel: total trips, average trip distance, average
+     fare per mile. -->
 
 ### Panel 1: TODO name
 
