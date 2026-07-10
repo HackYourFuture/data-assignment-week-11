@@ -2,7 +2,7 @@
 # Week 11 autograder: static analysis only.
 # The dashboards need a live Azure PostgreSQL connection and a running
 # Metabase instance that CI cannot reach, so this checks file presence,
-# code patterns, and metric-definition coverage for the Minimum tier.
+# code patterns, and metric-definition coverage for the Required tier.
 # Required/Extra work (freshness panel, presentation, date filter) is reviewed
 # by a teacher, not the autograder.
 # Total points: 100. Passing score: 60.
@@ -106,7 +106,7 @@ if [[ -f "$app" ]]; then
     if pygrep "\.metric\(" "$app"; then
       ((l3 += 5)); pass "app.py: uses .metric() (st.metric or a st.columns() cell)"
     else
-      fail "app.py: no .metric() call found -- Minimum requires at least one KPI"
+      fail "app.py: no .metric() call found -- Required tier needs at least one KPI"
     fi
 
     if pygrep "fct_trips" "$app"; then
@@ -148,7 +148,7 @@ if file_has_content "$defs"; then
 
   panel_count=$(grep -cE "^### Panel" "$defs" 2>/dev/null || true)
   if [[ "$panel_count" -ge 4 ]]; then
-    ((l4 += 10)); pass "metric_definitions.md: $panel_count panels documented (>=4 expected for Minimum: 3 Metabase + 1 Streamlit)"
+    ((l4 += 10)); pass "metric_definitions.md: $panel_count panels documented (>=4 expected: 3 Metabase + 1 Streamlit)"
   elif [[ "$panel_count" -ge 2 ]]; then
     ((l4 += 5)); warn "metric_definitions.md: only $panel_count panel(s) documented (expected >=4)"
   else

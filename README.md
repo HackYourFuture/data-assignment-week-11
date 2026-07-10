@@ -61,8 +61,8 @@ bash .hyf/test.sh
 cat .hyf/score.json
 ```
 
-Passing score: 60/100. This covers the **Minimum** tier only: it cannot verify your dashboards render real data (that needs a live Azure Postgres connection CI does not have), so a passing score is necessary but not sufficient. Your teacher reviews the actual dashboards and presentation for Required/Extra credit.
+Passing score: 60/100. This covers the **Required** tier only: it cannot verify your dashboards render real data (that needs a live Azure Postgres connection CI does not have), so a passing score is necessary but not sufficient. Your teacher reviews the actual dashboards and presentation for Required/Extra credit.
 
 ## Submitting
 
-Follow the Submission section of the assignment chapter: branch `week11/your-name`, commit, push, open a PR, and note in the PR description which tiers you completed (Minimum / Required / Extra) plus your Metabase dashboard link.
+Follow the Submission section of the assignment chapter: branch `week11/your-name`, commit, push, open a PR, and note in the PR description whether you also completed any Extra items plus your Metabase dashboard link.
