@@ -44,5 +44,6 @@ Five fields per metric: Name, Description, Calculation, Data source, Refresh fre
 - **Data source**: TODO
 - **Refresh frequency**: TODO
 
-<!-- Add more ### Panel blocks under either section if you build more (Target tier adds a
-     daily-trend and a freshness panel to Streamlit, and a date filter to Metabase). -->
+<!-- Add more ### Panel blocks under either section if you build more (the Required tier adds
+     an hour-of-day trend and a freshness panel to Streamlit; a Metabase date filter is Extra,
+     bonus credit, not required). -->

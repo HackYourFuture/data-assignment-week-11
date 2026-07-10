@@ -3,7 +3,7 @@
 Reads the Week 10 dbt mart ``fct_trips`` from Azure Postgres. The page
 setup and the ``run_query`` caching helper are already wired up (same
 pattern taught in "Building a Metrics Dashboard"). Your job: implement the
-three TODO-stubbed KPI queries below with your own SQL, then (Target tier)
+three TODO-stubbed KPI queries below with your own SQL, then (Required tier)
 add the hour-of-day trend, freshness panel, and payment-type filter
 described in the assignment brief.
 """

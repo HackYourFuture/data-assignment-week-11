@@ -3,7 +3,7 @@
 # The dashboards need a live Azure PostgreSQL connection and a running
 # Metabase instance that CI cannot reach, so this checks file presence,
 # code patterns, and metric-definition coverage for the Minimum tier.
-# Target/Stretch work (filters, freshness panel, presentation) is reviewed
+# Required/Extra work (freshness panel, presentation, date filter) is reviewed
 # by a teacher, not the autograder.
 # Total points: 100. Passing score: 60.
 set -euo pipefail
