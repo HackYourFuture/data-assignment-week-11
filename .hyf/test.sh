@@ -52,13 +52,13 @@ for f in "${required_files[@]}"; do
     pass "found $f"
   else
     fail "missing required file: $f"
-    ((missing += 1))
+    missing=$((missing + 1))
   fi
 done
 if [[ "$missing" -eq 0 ]]; then
   l1=20
 fi
-((score += l1))
+score=$((score + l1))
 pass "Level 1: required files ($l1/20 pts)"
 
 # ── Level 2 (15 pts): secrets hygiene ───────────────────────────────────────
@@ -66,7 +66,7 @@ l2=0
 app="$APP_DIR/app.py"
 
 if [[ -f "$REPO_ROOT/.gitignore" ]] && grep -qE "^\.env$|^\.env\b" "$REPO_ROOT/.gitignore"; then
-  ((l2 += 5)); pass "root .gitignore excludes .env"
+  l2=$((l2 + 5)); pass "root .gitignore excludes .env"
 else
   fail "root .gitignore must exclude .env"
 fi
@@ -74,28 +74,28 @@ fi
 if [[ -f "$APP_DIR/.env" ]]; then
   blocker "week11-streamlit/.env is committed -- run: git rm --cached week11-streamlit/.env, then rotate the Postgres password since it was pushed"
 else
-  ((l2 += 5)); pass "week11-streamlit/.env not committed"
+  l2=$((l2 + 5)); pass "week11-streamlit/.env not committed"
 fi
 
 if [[ -f "$app" ]] && grep -qE "postgresql://[^\"'[:space:]]*:[^\"'[:space:]]*@" "$app"; then
   blocker "app.py: hardcoded Postgres connection string with an inline password -- use os.environ/os.getenv instead, then rotate the password since it was pushed"
 elif [[ -f "$app" ]]; then
-  ((l2 += 5)); pass "app.py: no hardcoded Postgres credentials found"
+  l2=$((l2 + 5)); pass "app.py: no hardcoded Postgres credentials found"
 fi
-((score += l2))
+score=$((score + l2))
 pass "Level 2: secrets hygiene ($l2/15 pts)"
 
 # ── Level 3 (25 pts): Streamlit app content ─────────────────────────────────
 l3=0
 if [[ -f "$app" ]]; then
   if pygrep "^import sqlalchemy|^from sqlalchemy" "$app"; then
-    ((l3 += 5)); pass "app.py: imports sqlalchemy"
+    l3=$((l3 + 5)); pass "app.py: imports sqlalchemy"
   else
     fail "app.py: no sqlalchemy import found"
   fi
 
   if pygrep "os\.environ|os\.getenv" "$app"; then
-    ((l3 += 5)); pass "app.py: reads credentials from the environment"
+    l3=$((l3 + 5)); pass "app.py: reads credentials from the environment"
   else
     fail "app.py: no os.environ/os.getenv call found -- credentials must come from the environment"
   fi
@@ -104,27 +104,27 @@ if [[ -f "$app" ]]; then
     fail "app.py: raise NotImplementedError still present -- the headline KPIs panel is not implemented"
   else
     if pygrep "\.metric\(" "$app"; then
-      ((l3 += 5)); pass "app.py: uses .metric() (st.metric or a st.columns() cell)"
+      l3=$((l3 + 5)); pass "app.py: uses .metric() (st.metric or a st.columns() cell)"
     else
       fail "app.py: no .metric() call found -- Required tier needs at least one KPI"
     fi
 
     if pygrep "fct_trips" "$app"; then
-      ((l3 += 5)); pass "app.py: queries fct_trips"
+      l3=$((l3 + 5)); pass "app.py: queries fct_trips"
     else
       fail "app.py: fct_trips not referenced -- the dashboard must read the Week 10 mart"
     fi
   fi
 
   if pygrep "@st\.cache_data" "$app"; then
-    ((l3 += 5)); pass "app.py: uses @st.cache_data"
+    l3=$((l3 + 5)); pass "app.py: uses @st.cache_data"
   else
     fail "app.py: no @st.cache_data found -- database calls must be cached"
   fi
 else
   fail "week11-streamlit/app.py missing -- cannot check app content"
 fi
-((score += l3))
+score=$((score + l3))
 pass "Level 3: Streamlit app content ($l3/25 pts)"
 
 # ── Level 4 (20 pts): metric definitions ────────────────────────────────────
@@ -135,22 +135,22 @@ if file_has_content "$defs"; then
   fields_ok=0
   for field in "Name" "Description" "Calculation" "Data source" "Refresh frequency"; do
     if grep -qi "$field" "$defs"; then
-      ((fields_ok += 1))
+      fields_ok=$((fields_ok + 1))
     else
       fail "metric_definitions.md: field '$field' not found in any panel"
     fi
   done
   if [[ "$fields_ok" -eq 5 ]]; then
-    ((l4 += 10)); pass "metric_definitions.md: all five fields present"
+    l4=$((l4 + 10)); pass "metric_definitions.md: all five fields present"
   elif [[ "$fields_ok" -ge 3 ]]; then
-    ((l4 += 5)); warn "metric_definitions.md: only $fields_ok/5 fields found"
+    l4=$((l4 + 5)); warn "metric_definitions.md: only $fields_ok/5 fields found"
   fi
 
   panel_count=$(grep -cE "^### Panel" "$defs" 2>/dev/null || true)
   if [[ "$panel_count" -ge 4 ]]; then
-    ((l4 += 10)); pass "metric_definitions.md: $panel_count panels documented (>=4 expected: 3 Metabase + 1 Streamlit)"
+    l4=$((l4 + 10)); pass "metric_definitions.md: $panel_count panels documented (>=4 expected: 3 Metabase + 1 Streamlit)"
   elif [[ "$panel_count" -ge 2 ]]; then
-    ((l4 += 5)); warn "metric_definitions.md: only $panel_count panel(s) documented (expected >=4)"
+    l4=$((l4 + 5)); warn "metric_definitions.md: only $panel_count panel(s) documented (expected >=4)"
   else
     fail "metric_definitions.md: fewer than 2 panels documented"
   fi
@@ -161,7 +161,7 @@ if file_has_content "$defs"; then
 else
   fail "week11-streamlit/metric_definitions.md: empty"
 fi
-((score += l4))
+score=$((score + l4))
 pass "Level 4: metric definitions ($l4/20 pts)"
 
 # ── Level 5 (10 pts): README documents the Metabase dashboard ──────────────
@@ -173,13 +173,13 @@ if [[ -f "$readme" ]]; then
 fi
 
 if [[ -n "$submission_section" ]] && grep -qE "https?://" <<< "$submission_section" && ! grep -qxE "TODO" <<< "$submission_section"; then
-  ((l5 += 10)); pass "README.md: dashboard link present under 'My submission'"
+  l5=$((l5 + 10)); pass "README.md: dashboard link present under 'My submission'"
 elif find "$REPO_ROOT" -iname "*.png" -not -path "*/.git/*" | grep -q .; then
-  ((l5 += 10)); pass "README.md: screenshots present in repo"
+  l5=$((l5 + 10)); pass "README.md: screenshots present in repo"
 else
   fail "README.md: no Metabase dashboard link or screenshots found under 'My submission'"
 fi
-((score += l5))
+score=$((score + l5))
 pass "Level 5: Metabase dashboard documented ($l5/10 pts)"
 
 # ── Level 6 (10 pts): AI log ─────────────────────────────────────────────────
@@ -189,16 +189,16 @@ if file_has_content "$ai"; then
   chars=$(wc -c < "$ai" | tr -d ' ')
   todo_lines=$(grep -cxE "TODO" "$ai" 2>/dev/null || true)
   if [[ "$chars" -ge 600 && "$todo_lines" -eq 0 ]]; then
-    ((l6 += 10)); pass "AI_ASSIST.md: filled (${chars} chars, no leftover TODO lines)"
+    l6=$((l6 + 10)); pass "AI_ASSIST.md: filled (${chars} chars, no leftover TODO lines)"
   elif [[ "$chars" -ge 300 ]]; then
-    ((l6 += 5)); warn "AI_ASSIST.md: present but brief or has leftover TODOs (${chars} chars, ${todo_lines} TODO line(s))"
+    l6=$((l6 + 5)); warn "AI_ASSIST.md: present but brief or has leftover TODOs (${chars} chars, ${todo_lines} TODO line(s))"
   else
     fail "AI_ASSIST.md: too brief (${chars} chars)"
   fi
 else
   fail "AI_ASSIST.md: empty or still the raw template"
 fi
-((score += l6))
+score=$((score + l6))
 pass "Level 6: AI assistance log ($l6/10 pts)"
 
 # ── Final ─────────────────────────────────────────────────────────────────────
