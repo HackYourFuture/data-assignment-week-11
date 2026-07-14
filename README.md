@@ -28,7 +28,7 @@ This repo is a **ready-to-run Streamlit project** for the code-first dashboard, 
 └── .hyf/                            <- autograder, do not edit
 ```
 
-- **Metabase**: build it directly in the HYF-managed Metabase instance. There is nothing to scaffold here: put the dashboard link (or screenshots, if the public link is unavailable) in this `README.md`, under "My submission" below.
+- **Metabase**: build it directly in the HYF-managed Metabase instance. There is nothing to scaffold here. **Save your dashboard into the shared "Week 11 Submissions" collection** (not your personal collection) so your teacher can see and grade it, then put its link (plus screenshots or a PDF export) in this `README.md`, under "My submission" below.
 - **Streamlit**: `week11-streamlit/` is already wired up (same `run_query` caching pattern taught in "Building a Metrics Dashboard", Week 11 Chapter 5) with page setup done and the headline-KPIs panel stubbed as `raise NotImplementedError(...)`. Your job is the query and the three `.metric()` tiles, not the project scaffolding:
 
 ```bash
@@ -48,9 +48,28 @@ Fill in `week11-streamlit/metric_definitions.md`: a five-field definition (name,
 
 ## My submission
 
-<!-- TODO: paste your Metabase dashboard link, or add screenshots to this repo and reference them here. -->
+<!-- TODO: 1) Save your Metabase dashboard into the shared "Week 11 Submissions" collection.
+     2) Paste its link below, plus screenshots or a PDF export in this repo.
+     3) Paste your 5-minute presentation recording link (keep it PRIVATE). -->
 
-TODO
+- Metabase dashboard (in the **Week 11 Submissions** collection): TODO
+- Screenshots / PDF export: TODO
+- Presentation recording (unlisted / shared-only, never public): TODO
+
+> ⚠️ **Keep the recording private.** It shows your screen and voice. Never make it public and never commit the `.mp4` (git history is forever). Check the frame for passwords, `.env` contents, or connection strings before uploading.
+
+Host the recording in Azure: upload the `.mp4` to the shared `student-submissions` blob container (teachers get read access, nothing is public) and put the read-only link in your PR. The container is shared, so name your file after yourself: `week-11/<your-name>.mp4` (e.g. `week-11/jane-doe.mp4`). See "Host the recording on Azure Blob Storage" in the Week 11 Assignment chapter for the `az` CLI and Portal steps.
+
+To upload by hand, [open the `hyfstoragedev` Storage browser in the Azure Portal](https://portal.azure.com/#@07a14c4e-d88c-42f7-83b3-13af7e57ff3d/resource/subscriptions/1120c89d-2a5f-4a15-a582-2ea34f0bb5c3/resourceGroups/rg-hyf-data/providers/Microsoft.Storage/storageAccounts/hyfstoragedev/storagebrowser) (sign in with your HYF account), then go to **Blob containers → student-submissions → Upload**.
+
+## Packaging your submission for review
+
+Your pull request should review itself: a reviewer should be able to understand and check it without asking you anything. When you open the PR, GitHub loads a template (`.github/PULL_REQUEST_TEMPLATE.md`) into the description, fill in every section. Two things carry the most weight:
+
+- **Reproducible run instructions.** The Streamlit steps above must work from a clean clone against the reviewer's *own* Postgres: `uv sync`, copy `.env.example` to `.env`, set their own `POSTGRES_URL` (with `?sslmode=require`) and `DB_SCHEMA`, then `uv run streamlit run app.py`. Name every prerequisite, including your own `fct_trips` mart from Week 10. If a step only works on your machine, it is not reproducible.
+- **Proof for what a reviewer cannot run.** A reviewer cannot open your private `dev_<name>` schema or your Metabase Questions, so commit screenshots (or a PDF export) of your Metabase dashboard and your running Streamlit app. Screenshots are how you prove "it runs on my data."
+
+See "Package your pull request for review" in the Week 11 Assignment chapter for the full rationale.
 
 ## Check your score locally
 
