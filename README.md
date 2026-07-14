@@ -54,7 +54,7 @@ Fill in `week11-streamlit/metric_definitions.md`: a five-field definition (name,
 
 - Metabase dashboard (in the **Week 11 Submissions** collection): TODO
 - Screenshots / PDF export: TODO
-- Presentation recording (unlisted / shared-only, never public): TODO
+- Presentation recording (private, hosted in the Azure `student-submissions` container): TODO
 
 > ⚠️ **Keep the recording private.** It shows your screen and voice. Never make it public and never commit the `.mp4` (git history is forever). Check the frame for passwords, `.env` contents, or connection strings before uploading.
 
